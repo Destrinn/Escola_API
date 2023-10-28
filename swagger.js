@@ -3,9 +3,9 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const options = {
     swaggerDefinition: {
         info: {
-            title: 'Minha API RESTful',
+            title: 'API RestFul Escola_Nuvem',
             version: '1.0.0',
-            description: 'Documentação da API RESTful usando Swagger',
+            description: 'Documentação da API RESTful simulando as funcionalidades CRUD usando Swagger',
         },
         basePath: '/',
     },
