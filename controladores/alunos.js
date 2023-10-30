@@ -1,12 +1,4 @@
-const pg = require('pg');
-const pool = new pg.Pool({
-    host: 'localhost',
-    port: 5432,
-    user: 'postgres',
-    password: 'locao200',
-    database: 'escola_nuvem'
-});
-
+const pool = require('../Banco de dados/conexao')
 
 const listarAlunos = async (req, res) => {
     const query = 'select * from alunos'
@@ -24,12 +16,12 @@ const consultarAluno = async (req, res) => {
     try {
         const consulta = await pool.query(query, [id])
         if (consulta.rowCount < 1) {
-            return res.status(404).json({ mensagem: 'Aluno não encontrado   ' })
+            return res.status(404).json({ mensagem: 'Aluno não encontrado' })
         }
         return res.status(200).json(consulta.rows)
     } catch (error) {
-        // console.log(error.message) 
-        return res.status(500).json({ mensagem: 'Erro do Sistema' })
+        console.log(error.message)
+        return res.status(500).json({ mensagem: 'Erro do Sistema', aviso: error.message })
     }
 }
 
@@ -37,20 +29,6 @@ const cadastrarAluno = async (req, res) => {
     const { nome, idade, nome_do_professor, numero_da_sala } = req.body;
     const query = 'insert into alunos (nome, idade, nome_do_professor, numero_da_sala) values ($1, $2, $3, $4) returning *';
     const params = [nome, idade, nome_do_professor, numero_da_sala]
-
-    if (!nome) {
-        return res.status(401).json({ mensagem: 'o nome é um campo obrigatório' })
-    }
-    if (!idade) {
-        return res.status(401).json({ mensagem: 'o idade é um campo obrigatório' })
-    }
-    if (!nome_do_professor) {
-        return res.status(401).json({ mensagem: 'o nome do professor é um campo obrigatório' })
-    }
-    if (!numero_da_sala) {
-        return res.status(401).json({ mensagem: 'o numero da sala é um campo obrigatório' })
-    }
-
     try {
         const cadastro = await pool.query(query, params)
         return res.status(200).json(cadastro.rows)
@@ -75,12 +53,10 @@ const notaDoAluno = async (req, res) => {
 
     try {
         const validarAluno = await pool.query('select * from alunos where id = $1', [id])
+        const alterarNota = await pool.query(query, params);
         if (validarAluno.rowCount < 1) {
             return res.status(404).json({ mensagem: "Aluno não encontrado" })
         }
-
-        const alterarNota = await pool.query(query, params);
-
         return res.status(202).json(alterarNota.rows[0])
     } catch (error) {
         console.log(error.message)
@@ -95,13 +71,10 @@ const excluirAluno = async (req, res) => {
     const query = 'delete from alunos where id = $1'
     try {
         const consulta = await pool.query(query, [id])
-
         if (consulta.rowCount < 1) {
             return res.status(404).json({ mensagem: 'Aluno não encontrado' })
         }
-
         return res.status(200).json(consulta.rows)
-
     } catch (error) {
         // console.log(error.message) 
         return res.status(500).json({ mensagem: 'Erro do Sistema' })
