@@ -12,7 +12,7 @@ rotas.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 rotas.use(express.json());
 
 rotas.get('/', (req, res) => {
-    return res.json('ok')
+    return res.json('raulzin the tchola')
 })
 rotas.get('/alunos', listarAlunos)
 rotas.get('/alunos/consulta/:id', consultarAluno);
