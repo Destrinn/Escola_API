@@ -11,7 +11,9 @@ const rotas = express();
 rotas.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 rotas.use(express.json());
 
-
+rotas.get('/', (req, res) => {
+    return res.json('ok')
+})
 rotas.get('/alunos', listarAlunos)
 rotas.get('/alunos/consulta/:id', consultarAluno);
 rotas.post('/alunos/cadastro', verificarInformacoes, cadastrarAluno);
